@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
 import android.widget.TextView
 import android.widget.Toast
+import com.willkernel.app.kotlindemo.NullTest
 import com.willkernel.app.kotlindemo.R
 import com.willkernel.app.kotlindemo.data.Artist
 import com.willkernel.app.kotlindemo.data.Forecast1
@@ -40,6 +41,57 @@ class MainActivity : AppCompatActivity() {
         openWeatherMap()
 
         copyClass()
+
+        collectionsOperation()
+
+        nullable()
+    }
+
+    private fun nullable() {
+        val a: Int? = null
+        Log.e(tag, "a!! " + (a?.toString() ?: ""))
+        //"a!!.toString() throw KotlinNullPointerException
+
+        val test = NullTest()
+        val myObject: Any? = test.`object`
+        Log.e(tag, "$myObject ")
+    }
+
+    private fun collectionsOperation() {
+        val list = listOf(1, 1, 3, 4, 5, 6)
+        Log.e(tag, "any1 " + list.any { it % 2 == 0 })
+        Log.e(tag, "any2 " + list.any { it > 10 })
+        Log.e(tag, "all1 " + list.all { it < 10 })
+        Log.e(tag, "all2 " + list.all { it % 2 == 0 })
+        Log.e(tag, "count " + list.count { it % 2 == 0 })
+        Log.e(tag, "fold " + list.fold(4) { total, next -> total + next })
+        Log.e(tag, "foldRight " + list.foldRight(4) { total, next -> total + next })
+        list.forEach { println(it) }
+        list.forEachIndexed { index, i -> println("position $index value $i") }
+        Log.e(tag, "max " + list.max())
+        Log.e(tag, "maxBy " + list.maxBy { -it })
+        Log.e(tag, "min " + list.min())
+        Log.e(tag, "minBy " + list.minBy { -it })
+        Log.e(tag, "none " + list.none { it % 7 == 0 })
+        Log.e(tag, "reduce " + list.reduce { total, next -> total + next })
+        Log.e(tag, "reduce right " + list.reduceRight { total, next -> total + next })
+        Log.e(tag, "sumBy " + list.sumBy { it % 2 })
+        Log.e(tag, "drop " + list.drop(4))
+        Log.e(tag, "dropWhile " + list.dropWhile { it > 2 })
+        Log.e(tag, "dropLastWhile " + list.dropLastWhile { it > 2 })
+        Log.e(tag, "filter " + list.filter { it > 2 })
+        Log.e(tag, "filterNot " + list.filterNot { it > 2 })
+        val listWithNull = listOf(1, 2, null)
+        Log.e(tag, "filterNotNull " + listWithNull.filterNotNull())
+        Log.e(tag, "slice " + list.slice(listOf(1, 2, 4)))
+        Log.e(tag, "flatMap " + list.flatMap { listOf(it, it + 1) })
+        Log.e(tag, "groupBy " + list.groupBy { if (it % 2 == 0) "even" else "odd" })
+        Log.e(tag, "map " + list.map { it * 2 })
+        Log.e(tag, "partition " + list.partition { it % 2 == 0 })
+        Log.e(tag, "plus " + list + listOf(7, 8))
+        Log.e(tag, "zip " + list.zip(listOf(7, 4, 9, 8)))
+        Log.e(tag, "unzip " + listOf(Pair(5, 7), Pair(6, 8)).unzip())
+
     }
 
     private fun copyClass() {
@@ -79,7 +131,7 @@ class MainActivity : AppCompatActivity() {
 //                        toast(forecast.date)
 //                    }
 //                })
-                recyclerView.adapter = ForecastListAdapter(result) { forecast -> toast(forecast.date) }
+                recyclerView.adapter = ForecastListAdapter(result) { forecast -> toast(forecast.date.toString()) }
             }
         }
     }
@@ -186,7 +238,7 @@ class MainActivity : AppCompatActivity() {
 
         //        给定在null时的替代者
         val name = artist?.name ?: "empty"
-
+        Log.e(tag,name)
 //        确保artist不是null的情况下调用，否在抛异常KotlinNullPointerException
 //        artist!!.hashCode()
     }

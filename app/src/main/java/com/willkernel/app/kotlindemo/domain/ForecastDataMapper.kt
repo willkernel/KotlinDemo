@@ -13,7 +13,7 @@ import com.willkernel.app.kotlindemo.model.Forecast as ModelForecast
  */
 public class ForecastDataMapper {
     fun convertFromDataModel(result: ForecastResult): ForecastList {
-        return ForecastList(result.city.name, result.city.country,
+        return ForecastList(result.city.id, result.city.name, result.city.country,
                 convertForecastListToDomain(result.list))
     }
 
@@ -24,7 +24,7 @@ public class ForecastDataMapper {
 
     private fun convertForecastItemToDomain(forecast: Forecast):
             ModelForecast {
-        return ModelForecast(convertDate(forecast.dt),
+        return ModelForecast(forecast.weather[0].id, forecast.dt,
                 forecast.weather[0].description, forecast.temp.max.toInt(),
                 forecast.temp.min.toInt(), generateIconUrl(forecast.weather[0].icon))
     }
