@@ -1,4 +1,4 @@
-package com.willkernel.app.kotlindemo.domain
+package com.willkernel.app.kotlindemo.domain.commands
 
 /**
  * Created by willkernel

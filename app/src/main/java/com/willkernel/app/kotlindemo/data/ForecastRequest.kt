@@ -8,7 +8,7 @@ import java.net.URL
  * Created by willkernel
  * on 2018/3/23.
  */
-public class ForecastRequest(var zipCode: String) {
+public class ForecastRequest(val zipCode: String, val gson: Gson = Gson()) {
     companion object {
         //        private val APP_ID = "326719a9a3494ef25968fcb09950a987"
 //        private val URL = "http://api.openweathermap.org/data/2.5/weather?appid="
@@ -19,9 +19,8 @@ public class ForecastRequest(var zipCode: String) {
     }
 
     public fun execute(): ForecastResult {
-        //这个方法不推荐
         val forecastJson = URL(COMPLETE_URL + zipCode).readText()
         Log.e(javaClass.simpleName, forecastJson)
-        return Gson().fromJson(forecastJson, ForecastResult::class.java)
+        return gson.fromJson(forecastJson, ForecastResult::class.java)
     }
 }

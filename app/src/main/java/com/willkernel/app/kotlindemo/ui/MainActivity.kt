@@ -5,14 +5,18 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.support.v7.widget.LinearLayoutManager
 import android.util.Log
+import android.view.View
+import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import com.willkernel.app.kotlindemo.NullTest
 import com.willkernel.app.kotlindemo.R
+import com.willkernel.app.kotlindemo.Test
 import com.willkernel.app.kotlindemo.data.Artist
 import com.willkernel.app.kotlindemo.data.Forecast1
 import com.willkernel.app.kotlindemo.data.Person
-import com.willkernel.app.kotlindemo.domain.RequestForecastCommand
+import com.willkernel.app.kotlindemo.domain.commands.RequestForecastCommand
 import kotlinx.android.synthetic.main.activity_main.*
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.longToast
@@ -45,6 +49,105 @@ class MainActivity : AppCompatActivity() {
         collectionsOperation()
 
         nullable()
+
+        flowControl()
+
+        innerClass()
+
+        typeClass()
+    }
+
+    private fun typeClass() {
+        val t1 = TypedClass(24)
+        val t2 = TypedClass<String>("Hello Kotlin")
+        val test: Test = Test()
+        test.test()
+    }
+
+    class TypedClass<T>(parameter: T) {
+        val value: T = parameter
+    }
+
+    private fun innerClass() {
+        //        class Outer1{
+//            private val bar:Int=1
+//            class Nested{
+//                fun foo()=2
+//            }
+//        }
+//        val d1=Outer1.Nested().foo()
+        class Outer2 {
+            private val bar: Int = 1
+
+            inner class Nested {
+                fun foo() = bar
+            }
+        }
+
+        val d2 = Outer2().Nested().foo()
+    }
+
+    sealed class Option<out T> {
+        class Some<out T> : Option<T>()
+        object None : Option<Nothing>()
+    }
+
+    private fun flowControl() {
+        val v1 = 6
+        val z1 = if (v1 in 4..6) v1 else 0
+        Log.e(tag, "if z1 $z1")
+
+
+    }
+
+    private fun whenFun(x: Int, view: View) {
+        when (x) {
+            1 -> print("x == 1")
+            2 -> print("x == 2")
+            else -> {
+                print("I'm a block")
+                print("x is neither 1 nor 2")
+            }
+        }
+        val result = when (x) {
+            0, 1 -> "binary"
+            else -> "error"
+        }
+        when (view) {
+            is TextView -> view.setText("I'm a TextView")
+            is EditText -> toast("EditText value: ${view.getText()}")
+            is ViewGroup -> toast("Number of children: ${view.childCount} ")
+            else -> textView.visibility = View.GONE
+        }
+    }
+
+    private fun ranges(i: Int) {
+        if (i >= 0 && i <= 10)
+            println(i)
+
+        if (i in 0..10)
+            println(i)
+
+        for (i in 0..10)
+            println(i)
+
+//        Ranges 默认会自增长，所以如果像以下的代码
+        for (i in 10..0)
+            println(i)
+
+//        可以使用 downTo 函数
+        for (i in 10 downTo 0)
+            println(i)
+
+//        在 range 中使用 step 来定义一个从1到一个值的不同的空隙
+        for (i in 1..4 step 2) println(i)
+        for (i in 4 downTo 1 step 2) println(i)
+
+//        创建一个open range（不包含最后一项，译者注：类似数学中的开区间），你可以使用 until 函数
+//        使用 (i in 0 until list.size) 比 (i in 0..list.size - 1) 更加容易理解
+        for (i in 0 until 4) println(i)
+
+//        val views = (0..viewGroup.childCount - 1).map { viewGroup.getChildAt(it) }
     }
 
     private fun nullable() {
@@ -120,7 +223,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun openWeatherMap() {
         doAsync {
-            val result = RequestForecastCommand("94043").execute()
+            val result = RequestForecastCommand(94043).execute()
 //            val result = ForecastRequest("94043").execute()
             Log.e(tag, "result " + result.toString())
             //UIThread 是可以依赖于调用者如果它是被一个Activity 调用的，
@@ -238,7 +341,7 @@ class MainActivity : AppCompatActivity() {
 
         //        给定在null时的替代者
         val name = artist?.name ?: "empty"
-        Log.e(tag,name)
+        Log.e(tag, name)
 //        确保artist不是null的情况下调用，否在抛异常KotlinNullPointerException
 //        artist!!.hashCode()
     }
